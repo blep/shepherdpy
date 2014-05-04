@@ -117,6 +117,19 @@ class Client(mincemeat.Client):
             default='', help='input filename')
         return parser
 
+def map_default(key, values):
+    """Default map, will return key and values unmodified"""
+
+    yield key, values
+
+def reduce_default(_, values):
+    """Default reduce, will return values unmodified"""
+
+    if (len(values) == 1):
+        return values[0]
+    else:
+        return values
+
 # pylint: disable=R0904
 class Server(mincemeat.Server):
     """The server"""
@@ -238,19 +251,6 @@ def map_count(_, value):
 def reduce_count(_, values):
     """Sum values"""
     return sum(values)
-
-def map_default(key, values):
-    """Default map, will return key and values unmodified"""
-
-    yield key, values
-
-def reduce_default(_, values):
-    """Default reduce, will return values unmodified"""
-
-    if (len(values) == 1):
-        return values[0]
-    else:
-        return values
 
 class WordCountServer(Server):
     """A server for simple word counting"""
