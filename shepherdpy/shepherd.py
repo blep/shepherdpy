@@ -34,7 +34,7 @@ import optparse
 import socket
 import sys
 import time
-from multiprocessing import Pool, Process
+from multiprocessing import Pool, Process, cpu_count
 import mincemeat
 
 VERSION = "0.0.2"
@@ -106,6 +106,9 @@ class Client(mincemeat.Client):
         parser.add_option('-q', '--quiet', dest='quiet', action='store_true')
         parser.add_option('-n', '--number_of_clients', dest='number_of_clients',
             default='1', help='number of client processes')
+        parser.add_option('-N', '--auto_detect_number_of_clients',
+            dest='auto_detect_number_of_clients', action='store_true',
+            help='auto detect number of client processes')
         parser.add_option('-s', '--sleep', dest='client_sleep_seconds',
             default=None, help='client sleep seconds')
         parser.add_option('-t', '--client_timeout',
@@ -207,7 +210,10 @@ def run_clients(options=None):
         except AttributeError:
             default_options.__dict__.update(options)
     options = default_options
-    number_of_clients = int(options.number_of_clients)
+    if options.auto_detect_number_of_clients:
+        number_of_clients = cpu_count()
+    else:
+        number_of_clients = int(options.number_of_clients)
     pool = Pool(processes=number_of_clients)
     try:
         for _ in range(number_of_clients):
