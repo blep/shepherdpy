@@ -231,7 +231,7 @@ def run_clients(options=None):
 def run_server(options):
     """Global method to run a Server"""
 
-    parser = Client.options_parser()
+    parser = Server.options_parser()
     (default_options, _) = parser.parse_args([])
     if (options is not None):
         try:
