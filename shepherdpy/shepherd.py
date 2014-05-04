@@ -145,6 +145,7 @@ class Server(mincemeat.Server):
         """Run the server with the given options"""
 
         password = DEFAULT_PASSWORD
+        port = DEFAULT_PORT
         if ('datasource' in options.__dict__):
             if (isinstance(options.datasource, collections.Mapping)):
                 self.datasource = options.datasource
@@ -156,7 +157,9 @@ class Server(mincemeat.Server):
             self.reducefn = options.reducefn
         if ('password' in options.__dict__):
             password = options.password
-        return self.run_server(password=password)
+        if ('port' in options.__dict__):
+            port = options.port
+        return self.run_server(password=password, port=port)
 
     @staticmethod
     def options_parser():
