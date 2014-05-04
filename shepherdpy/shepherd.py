@@ -134,11 +134,12 @@ def reduce_default(_, values):
 class Server(mincemeat.Server):
     """The server"""
 
-    def __init__(self, datasource=None):
+    def __init__(self, datasource=None, mapfn=map_default,
+                 reducefn=reduce_default):
         mincemeat.Server.__init__(self)
         self.datasource = datasource
-        self.mapfn = map_default
-        self.reducefn = reduce_default
+        self.mapfn = mapfn
+        self.reducefn = reducefn
 
     @staticmethod
     def options_parser():
