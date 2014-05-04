@@ -113,8 +113,6 @@ class Client(mincemeat.Client):
             default=None, help='worker timeout seconds')
         parser.add_option('-8', '--run_forever', dest='run_forever',
             action='store_true')
-        parser.add_option('-i', '--input_filename', dest='input_filename',
-            default='', help='input filename')
         return parser
 
 def map_default(key, values):
