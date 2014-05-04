@@ -141,6 +141,23 @@ class Server(mincemeat.Server):
         self.mapfn = mapfn
         self.reducefn = reducefn
 
+    def run(self, options):
+        """Run the server with the given options"""
+
+        password = DEFAULT_PASSWORD
+        if ('datasource' in options.__dict__):
+            if (isinstance(options.datasource, collections.Mapping)):
+                self.datasource = options.datasource
+            else:
+                self.datasource = dict(enumerate(options.datasource))
+        if ('mapfn' in options.__dict__):
+            self.mapfn = options.mapfn
+        if ('reducefn' in options.__dict__):
+            self.reducefn = options.reducefn
+        if ('password' in options.__dict__):
+            password = options.password
+        return self.run_server(password=password)
+
     @staticmethod
     def options_parser():
         """Returns an options parser for Server"""
@@ -220,21 +237,11 @@ def run_server(options):
             default_options.__dict__.update(options)
     options = default_options
     logging.debug(options)
-    datasource = None
-    if (isinstance(options.datasource, collections.Mapping)):
-        datasource = options.datasource
-    else:
-        datasource = dict(enumerate(options.datasource))
-    server = None
     if ('server' in options.__dict__):
-        server = options.server(datasource)
+        server = options.server()
     else:
-        server = Server(datasource)
-    if ('mapfn' in options.__dict__):
-        server.mapfn = options.mapfn
-    if ('reducefn' in options.__dict__):
-        server.reducefn = options.reducefn
-    return server.run_server(password=options.password)
+        server = Server()
+    return server.run(options)
 
 def run(**kwargs):
     """Global method to run a server and a pool of clients"""
